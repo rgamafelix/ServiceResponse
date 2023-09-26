@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace RGamaFelix.ServiceResponse.RestResponse;
 
-public static class ServiceResultRestService //: IServiceResultRestService
+public static class ServiceResultRestService
 {
     public static IActionResult ReturnServiceResult(this IServiceResult response)
     {
