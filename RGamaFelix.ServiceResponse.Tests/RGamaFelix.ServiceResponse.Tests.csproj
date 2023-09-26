@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\RGamaFelix.ServiceResponse\RGamaFelix.ServiceResponse.csproj" />
+        <ProjectReference Include="..\RGamaFelix.ServiceResponse\RGamaFelix.ServiceResponse.csproj"/>
     </ItemGroup>
 
 </Project>

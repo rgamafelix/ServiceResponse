@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using System.Text;
 
-namespace GamaFelixR;
+namespace RGamaFelix.ServiceResponse;
 
 public abstract class ServiceResultBase : IServiceResult
 {

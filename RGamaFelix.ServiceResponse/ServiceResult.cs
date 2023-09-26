@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace GamaFelixR;
+namespace RGamaFelix.ServiceResponse;
 
 /// <summary>
 ///     Represent the response of a service execution that does not return a value

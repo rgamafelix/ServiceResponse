@@ -1,4 +1,4 @@
-namespace GamaFelixR;
+namespace RGamaFelix.ServiceResponse;
 
 public interface IServiceResult
 {

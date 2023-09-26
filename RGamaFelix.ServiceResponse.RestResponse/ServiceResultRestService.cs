@@ -1,7 +1,4 @@
-﻿using GamaFelixR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace RGamaFelix.ServiceResponse.RestResponse;
 

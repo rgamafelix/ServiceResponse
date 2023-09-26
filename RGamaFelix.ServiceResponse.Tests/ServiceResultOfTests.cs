@@ -1,3 +1,5 @@
+using RGamaFelix.ServiceResponse;
+
 namespace GamaFelixR.ServiceResponse.Tests;
 
 public class ServiceResultOfTests

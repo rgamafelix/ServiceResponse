@@ -1,6 +1,6 @@
 ﻿using Ardalis.SmartEnum;
 
-namespace GamaFelixR;
+namespace RGamaFelix.ServiceResponse;
 
 /// <summary>
 ///     Code of the result of a service execution
