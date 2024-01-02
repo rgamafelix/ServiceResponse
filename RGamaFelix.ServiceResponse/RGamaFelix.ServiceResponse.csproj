@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -11,11 +11,12 @@
         <Copyright>(c) 2023 Rodrigo Gama Felix &lt;rodrigo@gamafelix.com.br&gt;</Copyright>
         <RepositoryUrl>https://github.com/rgamafelix/ServiceResponse</RepositoryUrl>
         <PackageTags>C# dotnetcore library service-result</PackageTags>
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
-        <FileVersion>1.0.0.0</FileVersion>
+        <AssemblyVersion>1.0.0.1</AssemblyVersion>
+        <FileVersion>1.0.0.1</FileVersion>
         <PackageProjectUrl>https://github.com/rgamafelix/ServiceResponse</PackageProjectUrl>
-        <RepositoryType></RepositoryType>
+        <RepositoryType>git</RepositoryType>
         <PackageLicenseUrl>https://github.com/rgamafelix/ServiceResponse/blob/main/LICENSE</PackageLicenseUrl>
+        <Version>1.0.1</Version>
     </PropertyGroup>
 
     <ItemGroup>
