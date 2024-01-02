@@ -6,46 +6,48 @@ public static class ServiceResultRestService
 {
     public static IActionResult ReturnServiceResult(this IServiceResult response)
     {
-        return response.ResultType.Name switch
+        return response.ResultType.ToEnumValue() switch
         {
-            "InvalidData" => new BadRequestObjectResult(response.Errors),
-            "Multiplicity" => new ConflictObjectResult(response.Errors),
-            "GenericError" => new ObjectResult(response.Errors)
+            ResultTypeCodeEnum.InvalidData => new BadRequestObjectResult(response.Errors),
+            ResultTypeCodeEnum.Multiplicity => new ConflictObjectResult(response.Errors),
+            ResultTypeCodeEnum.GenericError => new ObjectResult(response.Errors)
             {
                 StatusCode = 500
             },
-            "NotFound" => new NotFoundObjectResult(response.Errors),
-            "AuthenticationError" => new UnauthorizedResult(),
-            "UnexpectedError" => new ObjectResult(response.Errors)
+            ResultTypeCodeEnum.NotFound => new NotFoundObjectResult(response.Errors),
+            ResultTypeCodeEnum.AuthenticationError => new UnauthorizedResult(),
+            ResultTypeCodeEnum.UnexpectedError => new ObjectResult(response.Errors)
             {
                 StatusCode = 500
             },
-            "AuthorizationError" => new ForbidResult(),
-            "Ok" => new NoContentResult(),
+            ResultTypeCodeEnum.AuthorizationError => new ForbidResult(),
+            ResultTypeCodeEnum.Ok => new NoContentResult(),
+            ResultTypeCodeEnum.Created => throw new ArgumentException("Created response must provide a uri and/or data"),
+            ResultTypeCodeEnum.Found => throw new ArgumentException("Found response must provide data"),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
 
     public static IActionResult ReturnServiceResult<T>(this IServiceResultOf<T> response, string? uri = null)
     {
-        return response.ResultType.Name switch
+        return response.ResultType.ToEnumValue() switch
         {
-            "InvalidData" => new BadRequestObjectResult(response.Errors),
-            "Multiplicity" => new ConflictObjectResult(response.Errors),
-            "GenericError" => new ObjectResult(response.Errors)
+            ResultTypeCodeEnum.InvalidData => new BadRequestObjectResult(response.Errors),
+            ResultTypeCodeEnum.Multiplicity => new ConflictObjectResult(response.Errors),
+            ResultTypeCodeEnum.GenericError => new ObjectResult(response.Errors)
             {
                 StatusCode = 500
             },
-            "NotFound" => new NotFoundObjectResult(response.Errors),
-            "AuthenticationError" => new UnauthorizedResult(),
-            "UnexpectedError" => new ObjectResult(response.Errors)
+            ResultTypeCodeEnum.NotFound => new NotFoundObjectResult(response.Errors),
+            ResultTypeCodeEnum.AuthenticationError => new UnauthorizedResult(),
+            ResultTypeCodeEnum.UnexpectedError => new ObjectResult(response.Errors)
             {
                 StatusCode = 500
             },
-            "AuthorizationError" => new ForbidResult(),
-            "Ok" => new OkObjectResult(response.Data),
-            "Created" => new CreatedResult(uri, response.Data),
-            "Found" => new OkObjectResult(response.Data),
+            ResultTypeCodeEnum.AuthorizationError => new ForbidResult(),
+            ResultTypeCodeEnum.Ok => new OkObjectResult(response.Data),
+            ResultTypeCodeEnum.Created => new CreatedResult(uri, response.Data),
+            ResultTypeCodeEnum.Found => new OkObjectResult(response.Data),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

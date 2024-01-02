@@ -65,5 +65,37 @@ public sealed class ResultTypeCode : SmartEnum<ResultTypeCode>
         IsSuccessCode = isSuccessCode;
     }
 
+    public ResultTypeCodeEnum ToEnumValue()
+    {
+        return Name switch
+        {
+            "GenericError" => ResultTypeCodeEnum.GenericError,
+            "NotFound" => ResultTypeCodeEnum.NotFound,
+            "InvalidData" => ResultTypeCodeEnum.InvalidData,
+            "Multiplicity" => ResultTypeCodeEnum.Multiplicity,
+            "AuthenticationError" => ResultTypeCodeEnum.AuthenticationError,
+            "AuthorizationError" => ResultTypeCodeEnum.AuthorizationError,
+            "UnexpectedError" => ResultTypeCodeEnum.UnexpectedError,
+            "Created" => ResultTypeCodeEnum.Created,
+            "Ok" => ResultTypeCodeEnum.Ok,
+            "Found" => ResultTypeCodeEnum.Found,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
     public bool IsSuccessCode { get; }
+}
+
+public enum ResultTypeCodeEnum
+{
+    GenericError = 0,
+    NotFound = 1,
+    InvalidData = 2,
+    Multiplicity = 3,
+    AuthenticationError = 4,
+    AuthorizationError = 5,
+    UnexpectedError = 6,
+    Created = 7,
+    Ok = 8,
+    Found = 9
 }
