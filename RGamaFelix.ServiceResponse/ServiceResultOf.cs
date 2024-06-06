@@ -1,22 +1,45 @@
-﻿using System.Text;
+﻿using System.Collections.Immutable;
+using System.Text;
 
 namespace RGamaFelix.ServiceResponse;
 
 /// <summary>
 ///     Represent the serviceResponse of a service execution that does return a value
 /// </summary>
-public class ServiceResultOf<T> : ServiceResultBase, IServiceResultOf<T>
+public class ServiceResultOf<T> : IServiceResultOf<T>
 {
-    protected ServiceResultOf(T? serviceResponse, IEnumerable<string>? errors, Exception? exception,
-        ResultTypeCode errorType) : base(errors, exception, errorType)
+    private List<string> _errors;
+
+    private ServiceResultOf(T? serviceResponse, IEnumerable<string>? errors, Exception? exception,
+        ResultTypeCode errorType)
     {
         Data = serviceResponse;
+        _errors = new List<string>(errors ?? new List<string>());
+        ResultType = errorType;
+        Exception = exception;
     }
 
     /// <summary>
     ///     The serviceResponse of a successful service execution
     /// </summary>
     public T? Data { get; }
+
+    /// <summary>
+    ///     Get the the list of errors occurred in the service execution
+    /// </summary>
+    public IReadOnlyCollection<string> Errors => _errors.ToImmutableArray();
+
+    public Exception? Exception { get; }
+
+    /// <summary>
+    ///     Get a flag indicating if the service call has succeeded
+    /// </summary>
+    public bool IsSuccess => ResultType.IsSuccessCode;
+
+    /// <summary>
+    ///     General error type
+    /// </summary>
+    public ResultTypeCode ResultType { get; }
 
     /// <summary>
     ///     Return a failed service serviceResponse
@@ -60,6 +83,7 @@ public class ServiceResultOf<T> : ServiceResultBase, IServiceResultOf<T>
     ///     Return a success service serviceResponse
     /// </summary>
     /// <param name="serviceResponse">The serviceResponse of the service execution</param>
+    /// <param name="resultTypeCode">General result of the service execution</param>
     /// <returns></returns>
     public static IServiceResultOf<T> Success(T serviceResponse, ResultTypeCode resultTypeCode)
     {
@@ -99,5 +123,20 @@ public class ServiceResultOf<T> : ServiceResultBase, IServiceResultOf<T>
     public static implicit operator T?(ServiceResultOf<T> resultOf)
     {
         return resultOf.Data;
+    }
+
+    /// <summary>
+    ///     Returns a string describing the error.
+    /// </summary>
+    /// <returns></returns>
+    public string ToErrorString()
+    {
+        var strBuilder = new StringBuilder();
+        foreach (var error in _errors)
+        {
+            strBuilder.AppendLine($"{error};");
+        }
+
+        return strBuilder.ToString();
     }
 }

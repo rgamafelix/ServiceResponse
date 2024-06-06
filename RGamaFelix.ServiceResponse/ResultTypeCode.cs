@@ -57,24 +57,6 @@ public sealed record ResultTypeCode(string Name, int Value, bool IsSuccessCode)
     /// </summary>
     /// <remarks>To be used in catch blocks. For normal 'unexpected erros' the <see cref="GenericError" /> is recomended</remarks>
     public static readonly ResultTypeCode UnexpectedError = new(nameof(UnexpectedError), 6, Fail);
-
-    // public ResultTypeCodeEnum ToEnumValue()
-    // {
-    //     return Name switch
-    //     {
-    //         "GenericError" => ResultTypeCodeEnum.GenericError,
-    //         "NotFound" => ResultTypeCodeEnum.NotFound,
-    //         "InvalidData" => ResultTypeCodeEnum.InvalidData,
-    //         "Multiplicity" => ResultTypeCodeEnum.Multiplicity,
-    //         "AuthenticationError" => ResultTypeCodeEnum.AuthenticationError,
-    //         "AuthorizationError" => ResultTypeCodeEnum.AuthorizationError,
-    //         "UnexpectedError" => ResultTypeCodeEnum.UnexpectedError,
-    //         "Created" => ResultTypeCodeEnum.Created,
-    //         "Ok" => ResultTypeCodeEnum.Ok,
-    //         "Found" => ResultTypeCodeEnum.Found,
-    //         _ => throw new ArgumentOutOfRangeException()
-    //     };
-    // }
 }
 
 // public enum ResultTypeCodeEnum

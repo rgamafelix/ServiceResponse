@@ -4,25 +4,6 @@ namespace RGamaFelix.ServiceResponse.RestResponse;
 
 public static class ServiceResultRestService
 {
-    public static IActionResult ReturnServiceResult(this IServiceResult response)
-    {
-        return response.ResultType.Name switch
-        {
-            nameof(ResultTypeCode.InvalidData) => new BadRequestObjectResult(response.Errors),
-            nameof(ResultTypeCode.Multiplicity) => new ConflictObjectResult(response.Errors),
-            nameof(ResultTypeCode.GenericError) => new ObjectResult(response.Errors) { StatusCode = 500 },
-            nameof(ResultTypeCode.NotFound) => new NotFoundObjectResult(response.Errors),
-            nameof(ResultTypeCode.AuthenticationError) => new UnauthorizedResult(),
-            nameof(ResultTypeCode.UnexpectedError) => new ObjectResult(response.Errors) { StatusCode = 500 },
-            nameof(ResultTypeCode.AuthorizationError) => new ForbidResult(),
-            nameof(ResultTypeCode.Ok) => new NoContentResult(),
-            nameof(ResultTypeCode.Created) => throw new ArgumentException(
-                "Created response must provide a uri and/or data"),
-            nameof(ResultTypeCode.Found) => throw new ArgumentException("Found response must provide data"),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
-
     public static IActionResult ReturnServiceResult<T>(this IServiceResultOf<T> response, string? uri = null)
     {
         return response.ResultType.Name switch
