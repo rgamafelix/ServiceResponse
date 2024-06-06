@@ -28,13 +28,7 @@ public class ServiceResultTests
     [TestCaseSource(typeof(ServiceResultTypeCodeProvider), nameof(ServiceResultTypeCodeProvider.ErrorTypeCodes))]
     public void WhenCreateResultWithError_ShouldReturnError(ResultTypeCode resultTypeCode)
     {
-        var errors = new List<string>
-        {
-            "Error 1",
-            "Error 2",
-            "Error 3"
-        };
-
+        var errors = new List<string> { "Error 1", "Error 2", "Error 3" };
         var result = ServiceResult.Fail(errors, resultTypeCode);
         Assert.Multiple(() =>
         {

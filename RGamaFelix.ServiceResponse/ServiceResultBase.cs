@@ -7,7 +7,7 @@ public abstract class ServiceResultBase : IServiceResult
 {
     private readonly List<string> _errors;
 
-    protected private ServiceResultBase(IEnumerable<string>? errors, Exception? exception, ResultTypeCode errorType)
+    private protected ServiceResultBase(IEnumerable<string>? errors, Exception? exception, ResultTypeCode errorType)
     {
         _errors = new List<string>(errors ?? new List<string>());
         ResultType = errorType;
@@ -38,7 +38,6 @@ public abstract class ServiceResultBase : IServiceResult
     public string ToErrorString()
     {
         var strBuilder = new StringBuilder();
-
         foreach (var error in _errors)
         {
             strBuilder.AppendLine($"{error};");

@@ -7,8 +7,10 @@ namespace RGamaFelix.ServiceResponse;
 /// </summary>
 public sealed class ServiceResult : ServiceResultBase
 {
-    private ServiceResult(IEnumerable<string>? errors, Exception? exception, ResultTypeCode errorType) : base(errors, exception, errorType)
-    { }
+    private ServiceResult(IEnumerable<string>? errors, Exception? exception, ResultTypeCode errorType) : base(errors,
+        exception, errorType)
+    {
+    }
 
     /// <summary>
     ///     Return a failed service serviceResponse
@@ -20,7 +22,7 @@ public sealed class ServiceResult : ServiceResultBase
     {
         if (resultType.IsSuccessCode)
         {
-            throw new ArgumentException("Success code cannot be used for error resultOfOf");
+            throw new ArgumentException("Success code cannot be used for error result");
         }
 
         return new ServiceResult(errors, null, resultType);
@@ -37,38 +39,33 @@ public sealed class ServiceResult : ServiceResultBase
     {
         if (resultType.IsSuccessCode)
         {
-            throw new ArgumentException("Success code cannot be used for error resultOfOf");
+            throw new ArgumentException("Success code cannot be used for error result");
         }
 
-        return new ServiceResult(new[]
-        {
-            error
-        }, null, resultType);
+        return new ServiceResult(new[] { error }, null, resultType);
     }
 
     public static ServiceResult Fail(Exception exception)
     {
-        return new ServiceResult(new[]
-        {
-            exception.Message
-        }, exception, ResultTypeCode.UnexpectedError);
+        return new ServiceResult(new[] { exception.Message }, exception, ResultTypeCode.UnexpectedError);
     }
 
     /// <summary>
     ///     Return a success service serviceResponse
     /// </summary>
     /// <returns></returns>
-    public static ServiceResult Success() => new(null, null, ResultTypeCode.Ok);
+    public static ServiceResult Success()
+    {
+        return new ServiceResult(null, null, ResultTypeCode.Ok);
+    }
 
     public override string ToString()
     {
         var strBuilder = new StringBuilder();
         strBuilder.AppendLine($"IsSuccess: {IsSuccess}({ResultType.Name})");
-
         if (!IsSuccess)
         {
             strBuilder.AppendLine($"Errors: {ToErrorString()}");
-
             if (Exception is not null)
             {
                 strBuilder.AppendLine($"Exception: {Exception.ToString()}");
@@ -78,5 +75,8 @@ public sealed class ServiceResult : ServiceResultBase
         return strBuilder.ToString();
     }
 
-    public static implicit operator Exception?(ServiceResult result) => result.Exception;
+    public static implicit operator Exception?(ServiceResult result)
+    {
+        return result.Exception;
+    }
 }

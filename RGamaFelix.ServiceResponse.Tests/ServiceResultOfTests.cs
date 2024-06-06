@@ -9,29 +9,20 @@ public class ServiceResultOfTests
     [OneTimeSetUp]
     public void Setup()
     {
-        testObject = new TestObject
-        {
-            Name = "Name",
-            Value = 500
-        };
+        testObject = new TestObject { Name = "Name", Value = 500 };
     }
 
     [TestCaseSource(typeof(ServiceResultTypeCodeProvider), nameof(ServiceResultTypeCodeProvider.SuccessTypeCodes))]
     public void WhenCreateErrorResultWithSuccessResultTypeCode_ShouldThrowException(ResultTypeCode resultTypeCode)
     {
-        Assert.That(() => ServiceResultOf<TestObject>.Fail("error", resultTypeCode), Throws.Exception.TypeOf<ArgumentException>());
+        Assert.That(() => ServiceResultOf<TestObject>.Fail("error", resultTypeCode),
+            Throws.Exception.TypeOf<ArgumentException>());
     }
 
     [TestCaseSource(typeof(ServiceResultTypeCodeProvider), nameof(ServiceResultTypeCodeProvider.ErrorTypeCodes))]
     public void WhenCreateResultWithError_ShouldReturnError(ResultTypeCode resultTypeCode)
     {
-        var errors = new List<string>
-        {
-            "Error 1",
-            "Error 2",
-            "Error 3"
-        };
-
+        var errors = new List<string> { "Error 1", "Error 2", "Error 3" };
         var result = ServiceResultOf<TestObject>.Fail(errors, resultTypeCode);
         Assert.Multiple(() =>
         {
@@ -75,7 +66,8 @@ public class ServiceResultOfTests
     [TestCaseSource(typeof(ServiceResultTypeCodeProvider), nameof(ServiceResultTypeCodeProvider.ErrorTypeCodes))]
     public void WhenCreateSuccessResultWithErrorResultTypeCode_ShouldThrowException(ResultTypeCode resultTypeCode)
     {
-        Assert.That(() => ServiceResultOf<TestObject>.Success(testObject, resultTypeCode), Throws.Exception.TypeOf<ArgumentException>());
+        Assert.That(() => ServiceResultOf<TestObject>.Success(testObject, resultTypeCode),
+            Throws.Exception.TypeOf<ArgumentException>());
     }
 
     private class TestObject

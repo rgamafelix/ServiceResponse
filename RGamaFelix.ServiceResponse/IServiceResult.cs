@@ -3,7 +3,7 @@ namespace RGamaFelix.ServiceResponse;
 public interface IServiceResult
 {
     /// <summary>
-    ///     Get the the list of errors occurred in the service execution
+    ///     Get the list of errors occurred in the service execution
     /// </summary>
     IReadOnlyCollection<string> Errors { get; }
 

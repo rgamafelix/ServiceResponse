@@ -7,8 +7,8 @@ namespace RGamaFelix.ServiceResponse;
 /// </summary>
 public class ServiceResultOf<T> : ServiceResultBase, IServiceResultOf<T>
 {
-    protected ServiceResultOf
-        (T? serviceResponse, IEnumerable<string>? errors, Exception? exception, ResultTypeCode errorType) : base(errors, exception, errorType)
+    protected ServiceResultOf(T? serviceResponse, IEnumerable<string>? errors, Exception? exception,
+        ResultTypeCode errorType) : base(errors, exception, errorType)
     {
         Data = serviceResponse;
     }
@@ -48,18 +48,12 @@ public class ServiceResultOf<T> : ServiceResultBase, IServiceResultOf<T>
             throw new ArgumentException("Success code cannot be used for error result");
         }
 
-        return new ServiceResultOf<T>(default, new[]
-        {
-            error
-        }, null, errorType);
+        return new ServiceResultOf<T>(default, new[] { error }, null, errorType);
     }
 
     public static IServiceResultOf<T> Fail(Exception exception)
     {
-        return new ServiceResultOf<T>(default, new[]
-        {
-            exception.Message
-        }, exception, ResultTypeCode.UnexpectedError);
+        return new ServiceResultOf<T>(default, new[] { exception.Message }, exception, ResultTypeCode.UnexpectedError);
     }
 
     /// <summary>
@@ -81,11 +75,9 @@ public class ServiceResultOf<T> : ServiceResultBase, IServiceResultOf<T>
     {
         var strBuilder = new StringBuilder();
         strBuilder.AppendLine($"IsSuccess: {IsSuccess}({ResultType.Name})");
-
         if (!IsSuccess)
         {
             strBuilder.AppendLine($"Errors: {ToErrorString()}");
-
             if (Exception is not null)
             {
                 strBuilder.AppendLine($"Exception: {Exception.ToString()}");
@@ -99,6 +91,13 @@ public class ServiceResultOf<T> : ServiceResultBase, IServiceResultOf<T>
         return strBuilder.ToString();
     }
 
-    public static implicit operator Exception?(ServiceResultOf<T> resultOf) => resultOf.Exception;
-    public static implicit operator T?(ServiceResultOf<T> resultOf) => resultOf.Data;
+    public static implicit operator Exception?(ServiceResultOf<T> resultOf)
+    {
+        return resultOf.Exception;
+    }
+
+    public static implicit operator T?(ServiceResultOf<T> resultOf)
+    {
+        return resultOf.Data;
+    }
 }
