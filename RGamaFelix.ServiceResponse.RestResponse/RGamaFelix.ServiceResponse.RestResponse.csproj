@@ -4,6 +4,19 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>ServiceResponse</Title>
+        <Authors>Rodrigo Felix</Authors>
+        <Description>Yet another service result pattern implementation</Description>
+        <Copyright>(c) 2023 Rodrigo Gama Felix &lt;rodrigo@gamafelix.com.br&gt;</Copyright>
+        <RepositoryUrl>https://github.com/rgamafelix/ServiceResponse</RepositoryUrl>
+        <PackageTags>C# dotnetcore library service-result</PackageTags>
+        <AssemblyVersion>1.1.0.0</AssemblyVersion>
+        <FileVersion>1.1.0.0</FileVersion>
+        <PackageProjectUrl>https://github.com/rgamafelix/ServiceResponse</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseUrl>https://github.com/rgamafelix/ServiceResponse/blob/main/LICENSE</PackageLicenseUrl>
+        <Version>1.1.0</Version>
     </PropertyGroup>
 
     <ItemGroup>

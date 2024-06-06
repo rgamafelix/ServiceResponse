@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <LangVersion>latestmajor</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>ServiceResponse</Title>
         <Authors>Rodrigo Felix</Authors>
@@ -18,5 +19,11 @@
         <PackageLicenseUrl>https://github.com/rgamafelix/ServiceResponse/blob/main/LICENSE</PackageLicenseUrl>
         <Version>1.1.0</Version>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.9.1"/>
+        <PackageReference Include="RGamaFelix.ServiceResponse" Version="1.0.2"/>
+    </ItemGroup>
+
 
 </Project>
