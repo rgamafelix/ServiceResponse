@@ -8,7 +8,7 @@ namespace RGamaFelix.ServiceResponse;
 /// </summary>
 public class ServiceResultOf<T> : IServiceResultOf<T>
 {
-    private List<string> _errors;
+    private readonly List<string> _errors;
 
     private ServiceResultOf(T? serviceResponse, IEnumerable<string>? errors, Exception? exception,
         ResultTypeCode errorType)
