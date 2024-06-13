@@ -3,11 +3,22 @@
 /// <summary>
 ///     Code of the result of a service execution
 /// </summary>
-public sealed record ResultTypeCode(string Name, int Value, bool IsSuccessCode)
+public sealed record ResultTypeCode
 {
+    public string Name { get; }
+    public int Value { get; }
+    public bool IsSuccessCode { get; }
+
+    private ResultTypeCode(string name, int value, bool isSuccessCode)
+    {
+        Name = name;
+        Value = value;
+        IsSuccessCode = isSuccessCode;
+    }
     private const bool Fail = false;
     private const bool Success = true;
 
+    /// <summary>
     /// Indicates that the user is not authenticated.
     /// </summary>
     public static readonly ResultTypeCode AuthenticationError = new(nameof(AuthenticationError), 4, Fail);
@@ -58,17 +69,3 @@ public sealed record ResultTypeCode(string Name, int Value, bool IsSuccessCode)
     /// <remarks>To be used in catch blocks. For normal 'unexpected erros' the <see cref="GenericError" /> is recomended</remarks>
     public static readonly ResultTypeCode UnexpectedError = new(nameof(UnexpectedError), 6, Fail);
 }
-
-// public enum ResultTypeCodeEnum
-// {
-//     GenericError = 0,
-//     NotFound = 1,
-//     InvalidData = 2,
-//     Multiplicity = 3,
-//     AuthenticationError = 4,
-//     AuthorizationError = 5,
-//     UnexpectedError = 6,
-//     Created = 7,
-//     Ok = 8,
-//     Found = 9
-// }
