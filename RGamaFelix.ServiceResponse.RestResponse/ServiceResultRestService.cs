@@ -4,21 +4,35 @@ namespace RGamaFelix.ServiceResponse.RestResponse;
 
 public static class ServiceResultRestService
 {
-    public static IActionResult ReturnServiceResult<T>(this IServiceResultOf<T> response, string? uri = null)
+  public static IActionResult ReturnServiceResult<T>(this IServiceResultOf<T> response, string? uri = null)
+  {
+    ArgumentNullException.ThrowIfNull(response);
+
+    return response.ResultType switch
     {
-        return response.ResultType.Name switch
-        {
-            nameof(ResultTypeCode.InvalidData) => new BadRequestObjectResult(response.Errors),
-            nameof(ResultTypeCode.Multiplicity) => new ConflictObjectResult(response.Errors),
-            nameof(ResultTypeCode.GenericError) => new ObjectResult(response.Errors) { StatusCode = 500 },
-            nameof(ResultTypeCode.NotFound) => new NotFoundObjectResult(response.Errors),
-            nameof(ResultTypeCode.AuthenticationError) => new UnauthorizedResult(),
-            nameof(ResultTypeCode.UnexpectedError) => new ObjectResult(response.Errors) { StatusCode = 500 },
-            nameof(ResultTypeCode.AuthorizationError) => new ForbidResult(),
-            nameof(ResultTypeCode.Ok) => new OkObjectResult(response.Data),
-            nameof(ResultTypeCode.Created) => new CreatedResult(uri, response.Data),
-            nameof(ResultTypeCode.Found) => new OkObjectResult(response.Data),
-            _ => throw new ArgumentOutOfRangeException()
-        };
-    }
+      _ when response.ResultType == ResultTypeCode.InvalidData => new BadRequestObjectResult(response.Errors),
+      _ when response.ResultType == ResultTypeCode.Multiplicity => new ConflictObjectResult(response.Errors),
+      _ when response.ResultType == ResultTypeCode.GenericError => new ObjectResult(response.Errors)
+      {
+        StatusCode = 500
+      },
+      _ when response.ResultType == ResultTypeCode.NotFound => new NotFoundObjectResult(response.Errors),
+      _ when response.ResultType == ResultTypeCode.AuthenticationError => new UnauthorizedResult(),
+      _ when response.ResultType == ResultTypeCode.UnexpectedError => new ObjectResult(response.Errors)
+      {
+        StatusCode = 500
+      },
+      _ when response.ResultType == ResultTypeCode.AuthorizationError => new ForbidResult(),
+      _ when response.ResultType == ResultTypeCode.Ok => new OkObjectResult(response.Data),
+      _ when response.ResultType == ResultTypeCode.Created => CreateCreatedResult(uri, response.Data),
+      _ when response.ResultType == ResultTypeCode.Found => new OkObjectResult(response.Data),
+      _ => throw new ArgumentOutOfRangeException(nameof(response.ResultType), response.ResultType,
+        "Unknown result type")
+    };
+  }
+
+  private static IActionResult CreateCreatedResult<T>(string? uri, T? data)
+  {
+    return string.IsNullOrWhiteSpace(uri) ? new ObjectResult(data) { StatusCode = 201 } : new CreatedResult(uri, data);
+  }
 }

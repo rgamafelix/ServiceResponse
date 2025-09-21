@@ -1,142 +1,167 @@
-﻿using System.Collections.Immutable;
-using System.Text;
+﻿using System.Text;
 
 namespace RGamaFelix.ServiceResponse;
 
 /// <summary>
-///     Represent the serviceResponse of a service execution that does return a value
+///   Represents the result of a service operation that can include a result of type <typeparamref name="T" />, a
+///   collection of errors, an exception, and a result status represented by <see cref="ResultTypeCode" />.
 /// </summary>
+/// <typeparam name="T">The type of the data returned from a service operation.</typeparam>
 public class ServiceResultOf<T> : IServiceResultOf<T>
 {
-    private List<string> _errors;
+  private readonly List<string> _errors;
 
-    private ServiceResultOf(T? serviceResponse, IEnumerable<string>? errors, Exception? exception,
-        ResultTypeCode errorType)
+  private ServiceResultOf(T? data, IEnumerable<string>? errors, Exception? exception, ResultTypeCode resultType)
+  {
+    Data = data;
+    _errors = errors?.ToList() ?? new List<string>();
+    ResultType = resultType;
+    Exception = exception;
+  }
+
+  /// <summary>The data of a successful service execution</summary>
+  public T? Data { get; }
+
+  /// <summary>Get the list of errors occurred in the service execution</summary>
+  public IReadOnlyCollection<string> Errors => _errors.AsReadOnly();
+
+  /// <summary>Represents the exception that occurred during the service execution.</summary>
+  public Exception? Exception { get; }
+
+  /// <summary>Get a flag indicating if the service call has succeeded</summary>
+  public bool IsSuccess => ResultType.IsSuccessCode;
+
+  /// <summary>General result type</summary>
+  public ResultTypeCode ResultType { get; }
+
+  /// <summary>
+  ///   Provides a string representation of the service result, including success status, data, errors, and exception
+  ///   details if present.
+  /// </summary>
+  /// <returns>
+  ///   A formatted string containing service result information such as success status, result type, errors, data,
+  ///   and exception details.
+  /// </returns>
+  public override string ToString()
+  {
+    var strBuilder = new StringBuilder();
+    strBuilder.AppendLine($"IsSuccess: {IsSuccess}({ResultType.Name})");
+
+    if (!IsSuccess)
     {
-        Data = serviceResponse;
-        _errors = new List<string>(errors ?? new List<string>());
-        ResultType = errorType;
-        Exception = exception;
+      strBuilder.AppendLine($"Errors: {ToErrorString()}");
+
+      if (Exception is not null)
+      {
+        strBuilder.AppendLine($"Exception: {Exception}");
+      }
+    }
+    else
+    {
+      strBuilder.AppendLine($"Data: {Data?.ToString() ?? "null"}");
     }
 
-    /// <summary>
-    ///     The serviceResponse of a successful service execution
-    /// </summary>
-    public T? Data { get; }
+    return strBuilder.ToString();
+  }
 
-    /// <summary>
-    ///     Get the the list of errors occurred in the service execution
-    /// </summary>
-    public IReadOnlyCollection<string> Errors => _errors.ToImmutableArray();
+  /// <summary>Return a failed service result</summary>
+  /// <param name="errors">List of error messages occurred during the service execution</param>
+  /// <param name="resultType">General result type</param>
+  public static IServiceResultOf<T> Fail(IEnumerable<string> errors, ResultTypeCode resultType)
+  {
+    ArgumentNullException.ThrowIfNull(errors);
+    EnsureErrorCode(resultType);
 
-    public Exception? Exception { get; }
+    return new ServiceResultOf<T>(default, errors, null, resultType);
+  }
 
-    /// <summary>
-    ///     Get a flag indicating if the service call has succeeded
-    /// </summary>
-    public bool IsSuccess => ResultType.IsSuccessCode;
+  /// <summary>Return a failed service result</summary>
+  /// <param name="error">Error message occurred during the service execution</param>
+  /// <param name="resultType">General result type</param>
+  /// <remarks>Accessory method for when only one error message is generated</remarks>
+  public static IServiceResultOf<T> Fail(string error, ResultTypeCode resultType)
+  {
+    ArgumentException.ThrowIfNullOrEmpty(error);
+    EnsureErrorCode(resultType);
 
-    /// <summary>
-    ///     General error type
-    /// </summary>
-    public ResultTypeCode ResultType { get; }
+    return Fail(new[] { error }, resultType);
+  }
 
-    /// <summary>
-    ///     Return a failed service serviceResponse
-    /// </summary>
-    /// <param name="errors">List of error messages occurred during the service execution</param>
-    /// <param name="errorType">General error type</param>
-    /// <returns></returns>
-    public static IServiceResultOf<T> Fail(IEnumerable<string> errors, ResultTypeCode errorType)
+  /// <summary>Creates a failed service result using the provided exception details as the error information.</summary>
+  /// <param name="exception">The exception to be included in the service result, providing error details and context.</param>
+  /// <returns>
+  ///   An instance of <see cref="IServiceResultOf{T}" /> representing the failure, containing the exception details
+  ///   and an "UnexpectedError" result type.
+  /// </returns>
+  public static IServiceResultOf<T> Fail(Exception exception)
+  {
+    ArgumentNullException.ThrowIfNull(exception);
+
+    return new ServiceResultOf<T>(default, new[] { exception.Message }, exception, ResultTypeCode.UnexpectedError);
+  }
+
+  /// <summary>
+  ///   Implicitly converts a ServiceResultOf instance to an Exception if an exception is present in the service
+  ///   result.
+  /// </summary>
+  /// <param name="resultOf">The service result instance to be converted.</param>
+  /// <returns>The Exception associated with the service result if present; otherwise, null.</returns>
+  public static implicit operator Exception?(ServiceResultOf<T> resultOf)
+  {
+    return resultOf.Exception;
+  }
+
+  /// <summary>Implicitly converts a ServiceResultOf instance to the data of type T if data is present in the service result.</summary>
+  /// <param name="resultOf">The service result instance to be converted.</param>
+  /// <returns>The data of type T contained in the service result if present; otherwise, null.</returns>
+  public static implicit operator T?(ServiceResultOf<T> resultOf)
+  {
+    return resultOf.Data;
+  }
+
+  /// <summary>Return a successful service result</summary>
+  /// <param name="data">The data of the service execution</param>
+  /// <param name="resultType">General result type of the service execution</param>
+  public static IServiceResultOf<T> Success(T data, ResultTypeCode resultType)
+  {
+    EnsureSuccessCode(resultType);
+
+    return new ServiceResultOf<T>(data, null, null, resultType);
+  }
+
+  /// <summary>
+  ///   Converts the list of error messages into a single formatted string where each error is separated by a newline
+  ///   and ends with a semicolon.
+  /// </summary>
+  /// <returns>
+  ///   A formatted string containing the error messages, each followed by a semicolon and separated by newlines. If
+  ///   no errors exist, an empty string is returned.
+  /// </returns>
+  public string ToErrorString()
+  {
+    if (_errors.Count == 0)
     {
-        if (errorType.IsSuccessCode)
-        {
-            throw new ArgumentException("Success code cannot be used for error result");
-        }
-
-        return new ServiceResultOf<T>(default, errors, null, errorType);
+      return string.Empty;
     }
 
-    /// <summary>
-    ///     Return a failed service serviceResponse
-    /// </summary>
-    /// <param name="error">Error message occurred during the service execution</param>
-    /// <param name="errorType">General error type</param>
-    /// <remarks>Accessory method for when only one error message is generated</remarks>
-    /// <returns></returns>
-    public static IServiceResultOf<T> Fail(string error, ResultTypeCode errorType)
+    // Keep the trailing ';' per original behavior, each on a new line.
+    return string.Join(Environment.NewLine, _errors.Select(e => $"{e};")) + Environment.NewLine;
+  }
+
+  // Centralized guards to remove duplication and make intent explicit.
+  private static void EnsureErrorCode(ResultTypeCode resultType)
+  {
+    if (resultType.IsSuccessCode)
     {
-        if (errorType.IsSuccessCode)
-        {
-            throw new ArgumentException("Success code cannot be used for error result");
-        }
-
-        return new ServiceResultOf<T>(default, new[] { error }, null, errorType);
+      throw new ArgumentException("Success code cannot be used for error result");
     }
+  }
 
-    public static IServiceResultOf<T> Fail(Exception exception)
+  private static void EnsureSuccessCode(ResultTypeCode resultType)
+  {
+    if (!resultType.IsSuccessCode)
     {
-        return new ServiceResultOf<T>(default, new[] { exception.Message }, exception, ResultTypeCode.UnexpectedError);
+      throw new ArgumentException("Error code cannot be used for success result");
     }
-
-    /// <summary>
-    ///     Return a success service serviceResponse
-    /// </summary>
-    /// <param name="serviceResponse">The serviceResponse of the service execution</param>
-    /// <param name="resultTypeCode">General result of the service execution</param>
-    /// <returns></returns>
-    public static IServiceResultOf<T> Success(T serviceResponse, ResultTypeCode resultTypeCode)
-    {
-        if (!resultTypeCode.IsSuccessCode)
-        {
-            throw new ArgumentException("Error code cannot be used for success result");
-        }
-
-        return new ServiceResultOf<T>(serviceResponse, null, null, resultTypeCode);
-    }
-
-    public override string ToString()
-    {
-        var strBuilder = new StringBuilder();
-        strBuilder.AppendLine($"IsSuccess: {IsSuccess}({ResultType.Name})");
-        if (!IsSuccess)
-        {
-            strBuilder.AppendLine($"Errors: {ToErrorString()}");
-            if (Exception is not null)
-            {
-                strBuilder.AppendLine($"Exception: {Exception.ToString()}");
-            }
-        }
-        else
-        {
-            strBuilder.AppendLine($"Data: {Data!.ToString()}");
-        }
-
-        return strBuilder.ToString();
-    }
-
-    public static implicit operator Exception?(ServiceResultOf<T> resultOf)
-    {
-        return resultOf.Exception;
-    }
-
-    public static implicit operator T?(ServiceResultOf<T> resultOf)
-    {
-        return resultOf.Data;
-    }
-
-    /// <summary>
-    ///     Returns a string describing the error.
-    /// </summary>
-    /// <returns></returns>
-    public string ToErrorString()
-    {
-        var strBuilder = new StringBuilder();
-        foreach (var error in _errors)
-        {
-            strBuilder.AppendLine($"{error};");
-        }
-
-        return strBuilder.ToString();
-    }
+  }
 }

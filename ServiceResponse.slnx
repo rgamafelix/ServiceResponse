@@ -1,0 +1,10 @@
+﻿<Solution>
+  <Folder Name="/SolutionItens/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="RGamaFelix.ServiceResponse.FluentValidation\RGamaFelix.ServiceResponse.FluentValidation.csproj" Type="Classic C#" />
+  <Project Path="RGamaFelix.ServiceResponse.RestResponse\RGamaFelix.ServiceResponse.RestResponse.csproj" Type="Classic C#" />
+  <Project Path="RGamaFelix.ServiceResponse.Tests\RGamaFelix.ServiceResponse.Tests.csproj" Type="Classic C#" />
+  <Project Path="RGamaFelix.ServiceResponse\RGamaFelix.ServiceResponse.csproj" Type="Classic C#" />
+</Solution>

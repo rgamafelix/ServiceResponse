@@ -1,15 +1,15 @@
 namespace RGamaFelix.ServiceResponse;
 
-/// <summary>
-/// Dummy type used for methods that do not return a value
-/// </summary>
+/// <summary>Represents a placeholder or dummy value for methods that do not return meaningful data.</summary>
 public sealed class Void
 {
-    private Void()
-    { }
+  private Void()
+  {
+  }
 
-    /// <summary>
-    /// The only instance of the <see cref="Void"/> type
-    /// </summary>
-    public static Void Value { get; } = new();
+  /// <summary>
+  ///   Gets an instance of the <see cref="Void" /> class, representing a dummy value for methods that do not have a
+  ///   meaningful return value.
+  /// </summary>
+  public static Void Value { get; } = new();
 }
