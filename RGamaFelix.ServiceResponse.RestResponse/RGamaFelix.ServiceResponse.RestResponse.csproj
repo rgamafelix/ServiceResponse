@@ -4,12 +4,12 @@
         <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <Title>ServiceResponse</Title>
+        <Title>ServiceResponse ASP.NET Core Integration</Title>
         <Authors>Rodrigo Felix</Authors>
-        <Description>Yet another service result pattern implementation</Description>
+        <Description>ASP.NET Core integration for RGamaFelix.ServiceResponse. Maps IServiceResultOf&lt;T&gt; to IActionResult with automatic HTTP status code selection and configurable error detail level.</Description>
         <Copyright>(c) 2023 Rodrigo Gama Felix &lt;rodrigo@gamafelix.com.br&gt;</Copyright>
         <RepositoryUrl>https://github.com/rgamafelix/ServiceResponse</RepositoryUrl>
-        <PackageTags>C# dotnetcore library service-result</PackageTags>
+        <PackageTags>service-result service-response aspnetcore rest http dotnet csharp</PackageTags>
         <AssemblyVersion>2.0.1</AssemblyVersion>
         <FileVersion>2.0.1</FileVersion>
         <PackageProjectUrl>https://github.com/rgamafelix/ServiceResponse</PackageProjectUrl>

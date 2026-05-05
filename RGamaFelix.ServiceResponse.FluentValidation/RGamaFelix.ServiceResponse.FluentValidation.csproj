@@ -5,12 +5,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latestmajor</LangVersion>
-        <Title>ServiceResponse</Title>
+        <Title>ServiceResponse FluentValidation Integration</Title>
         <Authors>Rodrigo Felix</Authors>
-        <Description>Yet another service result pattern implementation</Description>
+        <Description>FluentValidation integration for RGamaFelix.ServiceResponse. Converts ValidationResult to IServiceResultOf&lt;T&gt; with InvalidData result code.</Description>
         <Copyright>(c) 2023 Rodrigo Gama Felix &lt;rodrigo@gamafelix.com.br&gt;</Copyright>
         <RepositoryUrl>https://github.com/rgamafelix/ServiceResponse</RepositoryUrl>
-        <PackageTags>C# dotnetcore library service-result</PackageTags>
+        <PackageTags>service-result service-response fluentvalidation validation dotnet csharp</PackageTags>
         <AssemblyVersion>2.0.1</AssemblyVersion>
         <FileVersion>2.0.1</FileVersion>
         <PackageProjectUrl>https://github.com/rgamafelix/ServiceResponse</PackageProjectUrl>
