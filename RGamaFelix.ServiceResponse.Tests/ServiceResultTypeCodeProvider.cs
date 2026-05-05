@@ -1,26 +1,24 @@
+using System.Reflection;
 using RGamaFelix.ServiceResponse;
 
 namespace GamaFelixR.ServiceResponse.Tests;
 
 public class ServiceResultTypeCodeProvider
 {
-  public static IEnumerable<ResultTypeCode> SuccessTypeCodes => List.Where(x => x.IsSuccessCode);
-
-  private static IEnumerable<ResultTypeCode> List =>
-    new[]
-    {
-      ResultTypeCode.GenericError, ResultTypeCode.NotFound, ResultTypeCode.InvalidData, ResultTypeCode.Multiplicity,
-      ResultTypeCode.AuthenticationError, ResultTypeCode.AuthorizationError, ResultTypeCode.UnexpectedError,
-      ResultTypeCode.Created, ResultTypeCode.Ok, ResultTypeCode.Found
-    };
+  public static IEnumerable<ResultTypeCode> SuccessTypeCodes()
+  {
+    return AllTypeCodes().Where(x => x.IsSuccessCode);
+  }
 
   public static IEnumerable<ResultTypeCode> AllTypeCodes()
   {
-    return List;
+    return typeof(ResultTypeCode).GetFields(BindingFlags.Public | BindingFlags.Static)
+      .Where(f => f.FieldType == typeof(ResultTypeCode))
+      .Select(f => (ResultTypeCode)f.GetValue(null)!);
   }
 
   public static IEnumerable<ResultTypeCode> ErrorTypeCodes()
   {
-    return List.Where(x => x.IsSuccessCode is false);
+    return AllTypeCodes().Where(x => x.IsSuccessCode is false);
   }
 }

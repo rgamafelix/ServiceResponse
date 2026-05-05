@@ -1,9 +1,9 @@
-﻿using FluentValidation.Results;
+using FluentValidation.Results;
 
 namespace RGamaFelix.ServiceResponse.FluentValidation;
 
 /// <summary>
-/// Provides helper methods to work with FluentValidation results and convert them to service results.
+///   Provides extension methods to integrate FluentValidation with the ServiceResponse library.
 /// </summary>
 public static class Helper
 {
@@ -11,13 +11,15 @@ public static class Helper
     "Success validation result cannot be converted to error service result";
 
   /// <summary>
-  /// Converts a FluentValidation <see cref="ValidationResult"/> into a service result containing error messages.
+  ///   Converts a failed FluentValidation <see cref="ValidationResult" /> into a service result.
   /// </summary>
-  /// <typeparam name="T">The type of the result data in the service result.</typeparam>
-  /// <param name="validationResult">The validation result to convert. Must not be null, and must indicate a failed validation.</param>
-  /// <returns>An <see cref="IServiceResultOf{T}"/> containing the error messages from the validation result.</returns>
-  /// <exception cref="ArgumentNullException">Thrown when the <paramref name="validationResult"/> is null.</exception>
-  /// <exception cref="InvalidOperationException">Thrown when the <paramref name="validationResult"/> indicates a successful validation.</exception>
+  /// <typeparam name="T">The type of the data in the service result.</typeparam>
+  /// <param name="validationResult">The validation result to convert. Must indicate a failure.</param>
+  /// <returns>
+  ///   An <see cref="IServiceResultOf{T}" /> with <see cref="ResultTypeCode.InvalidData" /> containing the error messages from the validation result.
+  /// </returns>
+  /// <exception cref="ArgumentNullException">Thrown when <paramref name="validationResult" /> is null.</exception>
+  /// <exception cref="InvalidOperationException">Thrown when <paramref name="validationResult" /> indicates a successful validation.</exception>
   public static IServiceResultOf<T> ToServiceResult<T>(this ValidationResult validationResult)
   {
     ArgumentNullException.ThrowIfNull(validationResult);
@@ -27,8 +29,7 @@ public static class Helper
       throw new InvalidOperationException(InvalidValidationResultMessage);
     }
 
-    var errorMessages = validationResult.Errors?.Where(e => e?.ErrorMessage != null)
-      .Select(e => e.ErrorMessage) ?? [];
+    var errorMessages = validationResult.Errors.Where(e => e.ErrorMessage != null).Select(e => e.ErrorMessage);
 
     return ServiceResultOf<T>.Fail(errorMessages, ResultTypeCode.InvalidData);
   }

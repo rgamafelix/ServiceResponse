@@ -73,9 +73,72 @@ public class ServiceResultOfTests
       Throws.Exception.TypeOf<ArgumentException>());
   }
 
+  [TestCaseSource(typeof(ServiceResultTypeCodeProvider), nameof(ServiceResultTypeCodeProvider.ErrorTypeCodes))]
+  public void WhenCreateResultWithSingleError_ShouldReturnSingleError(ResultTypeCode resultTypeCode)
+  {
+    var result = ServiceResultOf<TestObject>.Fail("Single error", resultTypeCode);
+
+    Assert.Multiple(() =>
+    {
+      Assert.That(result.IsSuccess, Is.False);
+      Assert.That(result.Errors, Has.Count.EqualTo(1));
+      Assert.That(result.Errors.First(), Is.EqualTo("Single error"));
+      Assert.That(result.ResultType, Is.EqualTo(resultTypeCode));
+    });
+  }
+
+  [Test]
+  public void WhenCreateSuccessResultWithVoid_ShouldReturnSuccess()
+  {
+    var result = ServiceResultOf<RGamaFelix.ServiceResponse.Void>.Success(
+      RGamaFelix.ServiceResponse.Void.Value, ResultTypeCode.Ok);
+
+    Assert.Multiple(() =>
+    {
+      Assert.That(result.IsSuccess);
+      Assert.That(result.Data, Is.EqualTo(RGamaFelix.ServiceResponse.Void.Value));
+      Assert.That(result.Errors, Is.Empty);
+      Assert.That(result.Exception, Is.Null);
+    });
+  }
+
+  [Test]
+  public void WhenToErrorString_WithNoErrors_ShouldReturnEmpty()
+  {
+    var result = ServiceResultOf<TestObject>.Success(_testObject, ResultTypeCode.Ok);
+
+    Assert.That(result.ToErrorString(), Is.Empty);
+  }
+
+  [Test]
+  public void WhenToErrorString_WithSingleError_ShouldReturnError()
+  {
+    var result = ServiceResultOf<TestObject>.Fail("Something went wrong", ResultTypeCode.GenericError);
+
+    Assert.That(result.ToErrorString(), Is.EqualTo("Something went wrong"));
+  }
+
+  [Test]
+  public void WhenToErrorString_WithMultipleErrors_ShouldUseDefaultSeparator()
+  {
+    var errors = new[] { "Error A", "Error B", "Error C" };
+    var result = ServiceResultOf<TestObject>.Fail(errors, ResultTypeCode.InvalidData);
+
+    Assert.That(result.ToErrorString(), Is.EqualTo("Error A; Error B; Error C"));
+  }
+
+  [Test]
+  public void WhenToErrorString_WithCustomSeparator_ShouldUseCustomSeparator()
+  {
+    var errors = new[] { "Error A", "Error B" };
+    var result = ServiceResultOf<TestObject>.Fail(errors, ResultTypeCode.InvalidData);
+
+    Assert.That(result.ToErrorString(" | "), Is.EqualTo("Error A | Error B"));
+  }
+
   private class TestObject
   {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public int Value { get; set; }
   }
 }

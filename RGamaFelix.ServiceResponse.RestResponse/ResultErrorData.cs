@@ -1,8 +1,9 @@
 namespace RGamaFelix.ServiceResponse.RestResponse;
 
-internal record ResultErrorData(string[] Messages, string? Details)
+/// <summary>Represents the error body returned in REST responses when <see cref="Options" /> are provided.</summary>
+public record ResultErrorData(string[] Messages, string? Details)
 {
-  public ResultErrorData AddDetails(string details)
+  internal ResultErrorData AddDetails(string details)
   {
     return this with { Details = details };
   }
